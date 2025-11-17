@@ -53,8 +53,7 @@ if prenom:
 
         st.subheader("🧠 Métiers compatibles selon vos réponses :")
         for _, row in df_sorted.iterrows():
-            st.markdown(f"**{row['intitule']}** – Code ROME : `{row['code_rome']}`  
-Score : **{row['score']}**")
+           st.markdown(f"**{row['intitule']}** – Code ROME : `{row['code_rome']}`  \nScore : {row['score']}")
 
         if any(rep["type"] == "rejet catégorique" and rep["mot_cle"] in row["competences"] for _, row in df_rome.iterrows() for rep in user_responses):
             st.warning("⚠️ Un blocage fort a été détecté sur un environnement professionnel spécifique. Un accompagnement humain est recommandé.")
