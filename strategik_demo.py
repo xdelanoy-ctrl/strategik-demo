@@ -166,24 +166,38 @@ if st.session_state.responses:
         .reset_index(drop=True)
     )
 
-    # -------------------------------------------------------------------
-    # Affichage des résultats
-    # -------------------------------------------------------------------
+  # -------------------------------------------------------------------
+# Affichage des résultats
+# -------------------------------------------------------------------
 
-    st.subheader("🔎 Métiers compatibles selon vos préférences")
+st.subheader("🔎 Métiers compatibles selon vos préférences")
 
-    if df_sorted.empty:
-        st.info(
-            "Aucun métier compatible trouvé avec les préférences actuelles. "
-            "Vous pouvez essayer de modifier certaines réponses."
+if df_sorted.empty:
+    st.info(
+        "Aucun métier compatible trouvé avec les préférences actuelles. "
+        "Vous pouvez essayer de modifier certaines réponses."
+    )
+else:
+    # Top 3 affiché proprement
+    top_n = min(3, len(df_sorted))
+    st.write(f"Voici les {top_n} métiers qui ressortent le plus dans cet échantillon :")
+
+    for rank, (_, row) in enumerate(df_sorted.head(top_n).iterrows(), start=1):
+        st.markdown(
+            f"""### {rank}. {row['intitule']}
+Code ROME : `{row['code_rome']}`  
+Score global : **{row['score']}**"""
         )
-    else:
-        for _, row in df_sorted.iterrows():
-            st.markdown(
-                f"""**{row['intitule']}** – Code ROME : `{row['code_rome']}`
-Score : **{row['score']}**"""
-            )
-            st.markdown("---")
+
+        if row["score"] >= 80:
+            st.caption("➡ Profil très compatible dans cette petite démo.")
+        elif row["score"] >= 40:
+            st.caption("➡ Piste intéressante à explorer plus en détail.")
+        else:
+            st.caption("➡ Compatibilité faible mais à discuter selon le contexte.")
+
+        st.markdown("---")
+
 
     # -------------------------------------------------------------------
     # Alerte en cas de signaux rouges
